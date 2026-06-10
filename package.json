@@ -10,6 +10,6 @@
   },
   "engines": { "node": ">=20" },
   "keywords": ["make.com", "integromat", "automation", "testing", "blueprint", "iml", "mock", "airtable", "lemlist"],
-  "repository": { "type": "git", "url": "https://github.com/TLVTech/make-testground.git" },
+  "repository": { "type": "git", "url": "https://github.com/SaharBarak/make-testground.git" },
   "license": "MIT"
 }

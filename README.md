@@ -45,7 +45,7 @@ on GitHub that interprets Make blueprints, so we wrote one.
 ## Quick start
 
 ```bash
-git clone https://github.com/TLVTech/make-testground
+git clone https://github.com/SaharBarak/make-testground
 cd make-testground
 npm test          # runs the example suite with node:test — zero dependencies
 ```
@@ -130,4 +130,4 @@ Zero runtime dependencies. Node ≥ 20 (`node:test`).
 
 ## License
 
-MIT © TLVTech
+MIT © Sahar Barak

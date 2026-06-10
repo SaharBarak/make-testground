@@ -16,8 +16,14 @@ const OPS = {
   "number:equal": (a, b) => Number(a) === Number(b),
   "number:notequal": (a, b) => Number(a) !== Number(b),
   "number:greater": (a, b) => Number(a) > Number(b),
+  "number:greaterorequal": (a, b) => Number(a) >= Number(b),
+  "number:lessorequal": (a, b) => Number(a) <= Number(b),
+  "date:equal": (a, b) => String(a) === String(b) || Number(a) === Number(b),
   "number:less": (a, b) => Number(a) < Number(b),
   "boolean:equal": (a, b) => String(a) === String(b),
+  "array:greater": (a, b) => (Array.isArray(a) ? a.length : 0) > Number(b),
+  "array:empty": (a) => !Array.isArray(a) || a.length === 0,
+  "array:notempty": (a) => Array.isArray(a) && a.length > 0,
 };
 
 export function passesFilter(filter, bundles) {

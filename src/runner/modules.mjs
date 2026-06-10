@@ -65,5 +65,6 @@ export const handlers = {
   },
   "builtin:BasicAggregator": () => ({}),
   "gateway:CustomWebHook": ({ ctx }) => ctx.trigger ?? {},
+  "gateway:CustomMailHook": ({ ctx }) => ctx.trigger ?? {},
   "http:ActionSendData": () => ({ statusCode: 200 }), // grafana/loki etc — swallow
 };

@@ -21,6 +21,9 @@ const FUNCS = {
   if: (cond, a, b) => (truthy(cond) ? a : b),
   formatDate: (d, fmt) =>
     fmt === "X" ? String(Math.floor(new Date(d).getTime() / 1000)) : new Date(d).toISOString(),
+  parseDate: (s) => new Date(String(s ?? "")),
+  round: (n) => Math.round(Number(n)),
+  substring: (s, a, b) => String(s ?? "").substring(Number(a), Number(b)),
 };
 const CONSTANTS = { emptystring: "", space: " ", now: () => new Date() };
 
@@ -60,12 +63,28 @@ function evalExpr(src, bundles) {
   const skipWs = () => { while (/\s/.test(src[pos] ?? "")) pos++; };
 
   function parseConcat() {
+    // sum level: `+` is numeric when both sides are numeric, else concat;
+    // `-` is always numeric (dates coerce to epoch ms)
+    let v = parseTerm();
+    skipWs();
+    while (src[pos] === "+" || src[pos] === "-") {
+      const op = src[pos++]; skipWs();
+      const r = parseTerm();
+      if (op === "-") v = Number(v) - Number(r);
+      else if (typeof v === "number" && typeof r === "number") v = v + r;
+      else v = String(v ?? "") + String(r ?? "");
+      skipWs();
+    }
+    return v;
+  }
+
+  function parseTerm() {
     let v = parseCompare();
     skipWs();
-    while (src[pos] === "+") {
-      pos++; skipWs();
+    while (src[pos] === "*" || (src[pos] === "/" && src[pos + 1] !== "/")) {
+      const op = src[pos++]; skipWs();
       const r = parseCompare();
-      v = String(v ?? "") + String(r ?? "");
+      v = op === "*" ? Number(v) * Number(r) : Number(v) / Number(r);
       skipWs();
     }
     return v;
@@ -90,6 +109,14 @@ function evalExpr(src, bundles) {
 
   function parseAtom() {
     skipWs();
+    if (peek() === "(") { // parenthesized sub-expression
+      pos++;
+      const v = parseConcat();
+      skipWs();
+      if (src[pos] !== ")") throw new Error(`iml: expected ) @ ${pos} in: ${src}`);
+      pos++;
+      return v;
+    }
     if (peek() === '"' || peek() === "'") {
       const q = src[pos++];
       let out = "";

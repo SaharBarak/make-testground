@@ -1,0 +1,15 @@
+{
+  "name": "make-testground",
+  "version": "0.1.0",
+  "description": "Local test harness for Make.com (Integromat) scenarios — run blueprint JSON offline against in-memory mocks, with an IML expression evaluator and Airtable/lemlist fakes.",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "test": "node --test examples/*.test.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "keywords": ["make.com", "integromat", "automation", "testing", "blueprint", "iml", "mock", "airtable", "lemlist"],
+  "repository": { "type": "git", "url": "https://github.com/TLVTech/make-testground.git" },
+  "license": "MIT"
+}

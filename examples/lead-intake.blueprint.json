@@ -1,0 +1,65 @@
+{
+  "name": "Example - Lead Intake",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {},
+      "mapper": {}
+    },
+    {
+      "id": 2,
+      "module": "airtable:ActionSearchRecords",
+      "version": 3,
+      "mapper": {
+        "base": "appEXAMPLE0000000",
+        "table": "tblLEADS0000000000",
+        "formula": "AND({Email}!=\"\", LOWER({Email})=LOWER(\"{{1.email}}\"))",
+        "maxRecords": "1",
+        "useColumnId": false
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai-gpt-3:CreateCompletion",
+      "version": 1,
+      "mapper": {
+        "messages": [
+          { "role": "user", "content": "Is \"{{1.title}}\" a decision maker? Reply JSON {\"decision\":\"send\"|\"skip\"}" }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "module": "json:ParseJSON",
+      "version": 1,
+      "mapper": { "json": "{{3.result}}" }
+    },
+    {
+      "id": 5,
+      "module": "airtable:ActionCreateRecord",
+      "version": 3,
+      "filter": {
+        "name": "NEW + RELEVANT",
+        "conditions": [
+          [
+            { "a": "{{2.__IMTLENGTH__}}", "b": "0", "o": "number:equal" },
+            { "a": "{{4.decision}}", "b": "send", "o": "text:contain:ci" }
+          ]
+        ]
+      },
+      "mapper": {
+        "base": "appEXAMPLE0000000",
+        "table": "tblLEADS0000000000",
+        "record": {
+          "fldEmail0000000000": "{{1.email}}",
+          "fldName00000000000": "{{1.firstName}} {{1.lastName}}",
+          "fldStatus000000000": "New"
+        },
+        "typecast": false,
+        "useColumnId": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+node_modules/
+# live blueprint pulls may carry connection ids — keep them out of git
+fixtures/
+*.local.json
+.env
+.env.*
+.DS_Store
